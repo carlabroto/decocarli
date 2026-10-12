@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carli Deco</title>
+<style>
+  :root{
+    --bg:#f2eee4;
+    --panel:#fbf8f1;
+    --sage:#6e7f62;
+    --sage-dark:#4f5e45;
+    --rust:#b5674a;
+    --cream:#f6efe1;
+    --line:#e1d8c3;
+    --bubble-user:#e7ddc9;
+    --bubble-bot:#eef1e7;
+    --text:#3c3a32;
+    --muted:#8a8575;
+  }
+  *{box-sizing:border-box;}
+
+  /* Estampado floral pequeño y suave, reutilizado como fondo */
+  :root{
+    --floral-bg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Crect width='90' height='90' fill='%23f6efe1'/%3E%3Cg transform='translate(22,24)'%3E%3Ccircle cx='0' cy='-6' r='4' fill='%23e3b6ac'/%3E%3Ccircle cx='5.5' cy='-2' r='4' fill='%23e3b6ac'/%3E%3Ccircle cx='5.5' cy='4.5' r='4' fill='%23e3b6ac'/%3E%3Ccircle cx='-5.5' cy='4.5' r='4' fill='%23e3b6ac'/%3E%3Ccircle cx='-5.5' cy='-2' r='4' fill='%23e3b6ac'/%3E%3Ccircle cx='0' cy='0' r='2.6' fill='%23b5674a'/%3E%3Cpath d='M -7 8 Q -12 12 -17 10' stroke='%237e8b6c' stroke-width='1.6' fill='none'/%3E%3Cpath d='M 7 8 Q 12 12 17 10' stroke='%237e8b6c' stroke-width='1.6' fill='none'/%3E%3C/g%3E%3Cg transform='translate(65,62)'%3E%3Ccircle cx='0' cy='-5' r='3.2' fill='%23e3b6ac'/%3E%3Ccircle cx='4.4' cy='-1.6' r='3.2' fill='%23e3b6ac'/%3E%3Ccircle cx='4.4' cy='3.6' r='3.2' fill='%23e3b6ac'/%3E%3Ccircle cx='-4.4' cy='3.6' r='3.2' fill='%23e3b6ac'/%3E%3Ccircle cx='-4.4' cy='-1.6' r='3.2' fill='%23e3b6ac'/%3E%3Ccircle cx='0' cy='0' r='2' fill='%23b5674a'/%3E%3Cpath d='M -5.5 6 Q -9 9 -13 7.5' stroke='%237e8b6c' stroke-width='1.3' fill='none'/%3E%3C/g%3E%3C/svg%3E");
+  }
+  body{
+    margin:0;
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    background:var(--bg) var(--floral-bg);
+    background-size:90px 90px;
+    color:var(--text);
+    display:flex;
+    justify-content:center;
+    min-height:100vh;
+  }
+  .app{
+    width:100%;
+    max-width:580px;
+    display:flex;
+    flex-direction:column;
+    height:100vh;
+    background:var(--panel);
+    box-shadow:0 0 30px rgba(0,0,0,0.08);
+  }
+  header{
+    background:var(--cream) var(--floral-bg);
+    background-size:90px 90px;
+    border-bottom:1px solid var(--line);
+    padding:26px 24px 20px;
+    text-align:center;
+    position:relative;
+  }
+  header::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:rgba(246,239,225,0.55);
+  }
+  header .eyebrow, header h1, header p{
+    position:relative;
+  }
+  header .eyebrow{
+    text-transform:uppercase;
+    letter-spacing:2.5px;
+    font-size:11px;
+    color:var(--sage-dark);
+    margin:0 0 6px;
+  }
+  header h1{
+    margin:0;
+    font-size:26px;
+    font-weight:400;
+    letter-spacing:1px;
+    color:var(--text);
+  }
+  header p{
+    margin:8px 0 0;
+    font-size:13px;
+    color:var(--muted);
+    letter-spacing:0.3px;
+  }
+  #chat{
+    flex:1;
+    overflow-y:auto;
+    padding:22px 20px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    background:var(--panel) var(--floral-bg);
+    background-size:90px 90px;
+  }
+  .msg{
+    max-width:82%;
+    padding:11px 16px;
+    border-radius:16px;
+    line-height:1.5;
+    font-size:14.5px;
+    white-space:pre-wrap;
+  }
+  .msg.bot{
+    background:var(--bubble-bot);
+    align-self:flex-start;
+    border-bottom-left-radius:4px;
+    color:var(--sage-dark);
+  }
+  .msg.user{
+    background:var(--bubble-user);
+    align-self:flex-end;
+    border-bottom-right-radius:4px;
+    color:var(--text);
+  }
+  .msg a{
+    color:var(--rust);
+    text-decoration:underline;
+  }
+  form{
+    display:flex;
+    padding:14px;
+    gap:8px;
+    background:var(--cream);
+    border-top:1px solid var(--line);
+  }
+  input[type=text]{
+    flex:1;
+    padding:12px 16px;
+    border:1px solid var(--line);
+    border-radius:22px;
+    font-size:14.5px;
+    font-family:inherit;
+    outline:none;
+    background:#fff;
+  }
+  input[type=text]:focus{
+    border-color:var(--sage);
+  }
+  button{
+    background:var(--sage);
+    color:#fff;
+    border:none;
+    border-radius:22px;
+    padding:0 22px;
+    font-size:14.5px;
+    cursor:pointer;
+    font-family:inherit;
+    letter-spacing:0.3px;
+  }
+  button:hover{
+    background:var(--sage-dark);
+  }
+  .suggestions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+    padding:0 16px 14px;
+    background:var(--cream);
+  }
+  .chip{
+    background:#fff;
+    border:1px solid var(--line);
+    color:var(--sage-dark);
+    padding:6px 13px;
+    border-radius:16px;
+    font-size:12.5px;
+    cursor:pointer;
+    letter-spacing:0.2px;
+  }
+  .chip:hover{
+    background:var(--bubble-bot);
+    border-color:var(--sage);
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <p class="eyebrow">Carla Broto</p>
+    <h1>Carli Deco</h1>
+    <p>Tiendas, estilo y escapadas de decoración — a mi manera</p>
+  </header>
+  <div id="chat"></div>
+  <div class="suggestions" id="suggestions"></div>
+  <form id="form">
+    <input type="text" id="input" placeholder="Pregúntame algo de decoración..." autocomplete="off">
+    <button type="submit">Enviar</button>
+  </form>
+</div>
+
+<script>
+/* ======================================================
+   DATOS DE CARLA — edita aquí para ampliar el conocimiento
+   ====================================================== */
+
+const data = {
+  nombre: "Carla",
+
+  // Tiendas top, las que recomienda primero
+  topStores: [
+    { nombre: "Kave Home", nota: "relación calidad-precio muy buena y piezas con personalidad" },
+    { nombre: "Zara Home", nota: "textiles y detalles pequeños, siempre tiene algo bonito" },
+    { nombre: "Natura Casa", nota: "ese toque rústico/natural que me encanta" },
+    { nombre: "Samarkanda (Girona)", nota: "una tienda con mucho carácter, de las que te sorprenden" }
+  ],
+
+  // Resto del listado (2023) — tiendas que conoce pero no son su top
+  otrasTiendas: [
+    "Maison du Monde", "H&M Home", "Casa Viva", "IKEA",
+    "Boomerang (lámparas vintage, Gràcia)", "Banak Importa", "Buho Decor",
+    "Textura", "Kenay Home", "Carolina Blue", "Bo Concept (Diagonal)",
+    "Catalina House", "Azul Tierra", "Merc&Cia", "Santa&Cole", "La Maison",
+    "Cado Interiors", "Muy Mucho", "Bolia.com", "Calma House", "Matèria",
+    "Filocolore", "Mimbre&co", "Casa", "Ago Store Barcelona", "Hannunbcn",
+    "Bambu Bambu (La Bisbal)", "Decobruc (La Bisbal)", "Gla", "El Talleret",
+    "India&Pacific", "Le Mimosa", "Westwing", "Taoster Home", "Mango Home",
+    "Nordic Knots", "La Redoute", "The Masie", "Tikamoon", "Miv Interiores",
+    "Arima Deco", "MasB.Barcelona (Sant Cugat)", "Coton et Bois", "Sacum",
+    "Beachamtonhall (espelmas)", "Salvador Bachiller"
+  ],
+
+  estilo: "Mi estilo es un mix british + rústico/mediterráneo. Me encanta el estilo british, sobre todo el de los Cotswolds: esa mezcla de casas de piedra, chimeneas, flores por todas partes y un aire acogedor pero elegante. Y lo combino con materiales naturales, mimbre, madera, cerámica... ese punto más mediterráneo y cálido.",
+
+  criterio: "Cuando recomiendo una tienda no es solo por precio ni porque sea la más conocida: me gusta descubrir sitios con personalidad, tiendas pequeñas o con su propio rollo, aunque no sean las típicas.",
+
+  // Recomendación de escapadas: Carla se apoya en OUTLIERS, guía de alojamientos
+  // con diseño y autenticidad (outliersguide.com)
+  escapadas: "Para una escapada de fin de semana siempre miro OUTLIERS (outliersguide.com): es una guía de alojamientos con mucho diseño y autenticidad, nada genérico. Tienen propuestas por España, el resto de Europa y más allá. Si me dices una zona en concreto te digo qué mirar ahí.",
+
+  // Destinos concretos: alojamientos sacados de OUTLIERS + tiendas de decoración
+  // de la zona (de mi listado). Añade aquí más zonas cuando quieras.
+  destinos: [
+    {
+      aliases: ["emporda", "costa brava", "girona", "baix emporda", "alt emporda"],
+      nombreZona: "el Empordà / Costa Brava",
+      link: "https://outliersguide.com/blog/hotels-costabrava",
+      alojamientos: [
+        "La Bionda (Begur)", "Mas de Torrent (Torrent)", "Mas Valentí 1511 (Vall-llobrega)",
+        "Can Bassa (Madremanya)", "Arkhé (Pals)", "Hotel Peralada (Peralada)",
+        "Can Liret (Palafrugell)"
+      ],
+      tiendas: ["Samarkanda (Girona)", "Bambu Bambu (La Bisbal)", "Decobruc (La Bisbal)"]
+    },
+    {
+      aliases: ["cotswolds", "cotswold"],
+      nombreZona: "los Cotswolds",
+      link: "https://outliersguide.com/blog/cotswolds",
+      alojamientos: [
+        "The Bull (Charlbury)", "Cowley Manor Experimental (Cowley)", "Thyme (Lechlade)",
+        "The Studio (Upper Slaughter)", "The Newt Somerset (Somerset)"
+      ],
+      tiendas: []
+    }
+  ],
+
+  // Respuesta cuando el chat no sabe contestar
+  fallback: "Uy, esa todavía no la tengo preparada. Carli está trabajando en tener más respuestas pronto, pregúntame mientras tanto por mis tiendas favoritas, mi estilo o alguna escapada."
+};
+
+/* ======================================================
+   LÓGICA DEL CHAT
+   ====================================================== */
+
+const chatEl = document.getElementById('chat');
+const formEl = document.getElementById('form');
+const inputEl = document.getElementById('input');
+const suggestionsEl = document.getElementById('suggestions');
+
+function addMsg(html, who){
+  const div = document.createElement('div');
+  div.className = 'msg ' + who;
+  div.innerHTML = html;
+  chatEl.appendChild(div);
+  chatEl.scrollTop = chatEl.scrollHeight;
+}
+
+function escapeHtml(str){
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+function normalize(str){
+  return str.toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g,'')
+    .trim();
+}
+
+function findStore(textNorm){
+  const all = data.topStores.map(s => s.nombre).concat(data.otrasTiendas);
+  for(const nombre of all){
+    const n = normalize(nombre.split('(')[0]);
+    if(n.length > 2 && textNorm.includes(n)){
+      return nombre;
+    }
+  }
+  return null;
+}
+
+function findDestino(t){
+  for(const d of data.destinos){
+    for(const alias of d.aliases){
+      if(t.includes(normalize(alias))) return d;
+    }
+  }
+  return null;
+}
+
+function respond(userTextSafe, t){
+  // Saludo
+  if(/^(hola|buenas|hey|ey|que tal|hello)/.test(t)){
+    return "¡Hola! Soy Carli Deco, pregúntame lo que quieras sobre decoración: tiendas, estilo o una escapada de fin de semana.";
+  }
+
+  // Destino concreto (alojamiento + tiendas de la zona)
+  const destino = findDestino(t);
+  if(destino){
+    let respuesta = `Para ${destino.nombreZona} miro siempre OUTLIERS: ahí tienen ${destino.alojamientos.join(', ')}. `;
+    if(destino.tiendas.length){
+      respuesta += `Y de tiendas de decoración por la zona, ${destino.tiendas.join(', ')}. `;
+    }
+    respuesta += `<a href="${destino.link}" target="_blank" rel="noopener">Mira el artículo completo aquí</a>`;
+    return respuesta;
+  }
+
+  // Escapadas / fines de semana / viajes (sin zona concreta)
+  if(/escapada|fin de semana|finde|viaje|alojamiento|hotel|donde ir|donde dormir|airbnb/.test(t)){
+    return `${data.escapadas} <a href="https://outliersguide.com/" target="_blank" rel="noopener">outliersguide.com</a>`;
+  }
+
+  // Tienda concreta mencionada
+  const tienda = findStore(t);
+  if(tienda){
+    const top = data.topStores.find(s => s.nombre === tienda);
+    if(top){
+      return `¡Sí, ${top.nombre} me encanta! La tengo entre mis favoritas: ${top.nota}.`;
+    }
+    return `Sí, conozco ${tienda}, la tengo apuntada. No está en mi top absoluto pero siempre vale la pena echarle un ojo.`;
+  }
+
+  // Tiendas favoritas / recomendación general
+  if(/tienda|marca|comprar|recomiend/.test(t) && !/estilo/.test(t)){
+    const lista = data.topStores.map(s => `${s.nombre} (${s.nota})`).join(', ');
+    return `Mis favoritas son: ${lista}. Son las que recomendaría sin pensarlo.`;
+  }
+
+  // Estilo / gustos
+  if(/estilo|gusto|cotswold|british|ingles|rustico|mediterran/.test(t)){
+    return data.estilo;
+  }
+
+  // Criterio de elección
+  if(/criterio|como elige|por que elige|como las elige|por que te gusta/.test(t)){
+    return data.criterio;
+  }
+
+  // Listado completo
+  if(/todas|lista completa|listado|que tiendas conoces/.test(t)){
+    return `Tiendas que tengo en el radar, aparte de mis favoritas: ${data.otrasTiendas.join(', ')}.`;
+  }
+
+  // Fallback
+  return data.fallback;
+}
+
+formEl.addEventListener('submit', function(e){
+  e.preventDefault();
+  const text = inputEl.value.trim();
+  if(!text) return;
+  addMsg(escapeHtml(text), 'user');
+  inputEl.value = '';
+  const t = normalize(text);
+  setTimeout(() => {
+    addMsg(respond(escapeHtml(text), t), 'bot');
+  }, 300);
+});
+
+const suggestions = [
+  "¿Cuáles son tus tiendas favoritas?",
+  "¿Cuál es tu estilo de decoración?",
+  "¿Te gusta Kave Home?",
+  "¿Dónde me alojaría en el Empordà?"
+];
+suggestions.forEach(s => {
+  const chip = document.createElement('div');
+  chip.className = 'chip';
+  chip.textContent = s;
+  chip.addEventListener('click', () => {
+    inputEl.value = s;
+    formEl.dispatchEvent(new Event('submit'));
+  });
+  suggestionsEl.appendChild(chip);
+});
+
+addMsg("¡Hola! Soy Carli Deco. Pregúntame sobre mis tiendas favoritas de decoración, mi estilo, o dónde escaparte un fin de semana.", 'bot');
+</script>
+</body>
+</html>
